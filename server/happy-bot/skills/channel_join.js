@@ -19,7 +19,9 @@ module.exports = function(controller) {
         // The surveys functions creates and starts a Crontask that sends the survey to all normal users in the channel.
         // Use https://crontab.guru/ for the Crontab format.
 
-        surveys("*/1 * * * MON-FRI", bot, classId, message);
+        surveys("30 9 * * MON-FRI", bot, classId, message);
+
+        surveys("00 16 * * MON-FRI", bot, classId, message);
       } catch (err) {
         console.log(err);
       }
@@ -49,7 +51,7 @@ const surveys = (dateStr, bot, classId, message) =>
   );
 
 const sendSurvey = async (res, member, classId, bot) => {
-  if (res.user.is_bot) {
+  if (res.user.is_bot || res.user.is_admin || res.user.is_owner) {
     return false;
   }
   try {
@@ -70,7 +72,7 @@ const sendSurvey = async (res, member, classId, bot) => {
       if (err) {
         console.log(err);
       } else {
-        convo.setTimeout(10 * 1000);
+        convo.setTimeout(60 * 60 * 1000);
 
         askQuestion(0, questions, studentId, convo, classId);
 

@@ -19,7 +19,9 @@ module.exports = function(controller) {
         // The surveys functions creates and starts a Crontask that sends the survey to all normal users in the channel.
         // Use https://crontab.guru/ for the Crontab format.
 
-        surveys("*/1 * * * MON-FRI", bot, classId, message);
+        surveys("30 9 * * MON-FRI", bot, classId, message);
+
+        surveys("00 16 * * MON-FRI", bot, classId, message);
       } catch (err) {
         console.log(err);
       }
@@ -70,13 +72,13 @@ const sendSurvey = async (res, member, classId, bot) => {
       if (err) {
         console.log(err);
       } else {
-        convo.setTimeout(10 * 1000);
+        convo.setTimeout(60 * 60 * 1000);
 
-        askQuestion(0, questions, studentId, convo);
+        askQuestion(0, questions, studentId, convo, classId);
 
-        askQuestion(1, questions, studentId, convo);
+        askQuestion(1, questions, studentId, convo, classId);
 
-        askQuestion(2, questions, studentId, convo);
+        askQuestion(2, questions, studentId, convo, classId);
 
         convo.say("Thank you! Have fun today :cocorobot:");
 
@@ -94,7 +96,7 @@ const sendSurvey = async (res, member, classId, bot) => {
   }
 };
 
-const askQuestion = (i, questions, studentId, convo) =>
+const askQuestion = (i, questions, studentId, convo, classId) =>
   convo.ask(
     {
       attachments: attachment(i, questions)
@@ -104,8 +106,8 @@ const askQuestion = (i, questions, studentId, convo) =>
       await Response.create({
         answer: res.text,
         student_id: studentId,
-        question_id: i + 1
-        // class_id: classId
+        question_id: i + 1,
+        class_id: classId
       });
       convo.next();
     }

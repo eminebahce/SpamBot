@@ -49,7 +49,7 @@ const surveys = (dateStr, bot, classId, message) =>
   );
 
 const sendSurvey = async (res, member, classId, bot) => {
-  if (res.user.is_bot || res.user.is_admin || res.user.is_owner) {
+  if (res.user.is_bot) {
     return false;
   }
   try {
@@ -72,11 +72,11 @@ const sendSurvey = async (res, member, classId, bot) => {
       } else {
         convo.setTimeout(10 * 1000);
 
-        askQuestion(0, questions, studentId, convo);
+        askQuestion(0, questions, studentId, convo, classId);
 
-        askQuestion(1, questions, studentId, convo);
+        askQuestion(1, questions, studentId, convo, classId);
 
-        askQuestion(2, questions, studentId, convo);
+        askQuestion(2, questions, studentId, convo, classId);
 
         convo.say("Thank you! Have fun today :cocorobot:");
 
@@ -94,7 +94,7 @@ const sendSurvey = async (res, member, classId, bot) => {
   }
 };
 
-const askQuestion = (i, questions, studentId, convo) =>
+const askQuestion = (i, questions, studentId, convo, classId) =>
   convo.ask(
     {
       attachments: attachment(i, questions)
@@ -104,8 +104,8 @@ const askQuestion = (i, questions, studentId, convo) =>
       await Response.create({
         answer: res.text,
         student_id: studentId,
-        question_id: i + 1
-        // class_id: classId
+        question_id: i + 1,
+        class_id: classId
       });
       convo.next();
     }
